@@ -1,0 +1,102 @@
+naive
+---------------------------------------------------------------------
+1   fibonacci
+func fibonacci (n int) int {
+// write your code here
+
+    var res [1000]int
+    res[0] = 0
+    res[1] = 1
+
+    if n >= 2 {
+        for t := 2; t<=n; t++ {
+            res[t] = res[t-1] + res[t-2]
+        }       
+    }
+
+    return res[n-1]
+}
+---------------------------------------------------------------------
+2   bubble sort
+class Solution {
+public:
+    /**
+     * @param A: an integer array
+     * @return: nothing
+     */
+    void sortIntegers(vector<int> &A) {
+        // write your code here
+        int l = A.size();
+    	for (int i = 0; i < l-1; i++) {
+    		for (int j = 0; j < l-1-i; j++) {
+    			if (A[j] > A[j+1]) {
+    			    swap(A[j], A[j+1]);
+    				// A[j], A[j+1] = A[j+1], A[j]
+    			}
+    		}
+    	}
+    }
+};
+---------------------------------------------------------------------
+3   binary tree: maximum node
+class Solution {
+public:
+    /*
+     * @param root: the root of tree
+     * @return: the max node
+     */
+    TreeNode * maxNode(TreeNode * root) {
+        // write your code here
+        if (root == NULL) return NULL;
+        if (root->left == NULL && root->right == NULL) return root;
+        TreeNode *t = root;
+        TreeNode *l, *r;
+        if (root->left != NULL) {
+            l = maxNode(root->left);
+            if (t->val <= l->val){
+                t = l;
+            }
+        }
+
+        if (root->right != NULL) {
+            r = maxNode(root->right);
+            if (t->val <= r->val) {
+                t = r;
+            }
+        }
+        
+        return t;
+    }
+};
+---------------------------------------------------------------------
+4    remove an element in list
+class Solution {
+public:
+    /*
+     * @param head: a ListNode
+     * @param val: An integer
+     * @return: a ListNode
+     */
+    ListNode * removeElements(ListNode * head, int val) {
+        // write your code here
+
+        if (head == NULL || head->val == val) return NULL;
+        ListNode * tm = head;
+        ListNode * ne = tm->next;
+        while(ne != NULL) {
+            if (ne->val == val) {
+                if (ne->next != NULL) {
+                    tm->next = ne->next;
+                }else {
+                    tm->next = NULL;
+                }
+                ne = tm->next;
+            } else {
+                tm = ne;
+                ne = tm->next;
+            }
+        }
+    return head;
+    }
+};
+---------------------------------------------------------------------
