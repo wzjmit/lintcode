@@ -1,0 +1,1683 @@
+easy
+---------------------------------------------------------------------
+1 subarray whose sum is K
+key info : If the cumulative sum up to two indices, say ii and j is at a difference of k i.e. if sum[i] - sum[j] = k, the sum of elements lying between indices i and j is k.
+
+class Solution {
+public:
+    /*
+     * @param nums: A list of integers
+     * @return: A list of integers includes the index of the first number and the index of the last number
+     */
+    vector<int> subarraySum(vector<int> &nums) {
+        // write your code here
+         unordered_map<int, int> m;
+         m.emplace(0, -1);
+         int l = nums.size();
+         int sum = 0;
+         for (int i=0;i<l;i++) {
+            if (nums[i] == 0) {
+                return {i,i};
+            }             
+            sum += nums[i];
+            if (m.count(sum)){
+                
+                return {m[sum]+1, i};
+            }
+            m.emplace(sum, i);
+        }
+        return {-1, -1};
+    }
+};
+---------------------------------------------------------------------
+2 First Position of Target  (copy from others, final 2 ifs put outside of for loop)
+/**
+ * @param nums: The midnteger array.
+ * @param target: Target to fmidnd.
+ * @return: The fmidrst posmidtmidon of target. Posmidtmidon starts from 0.
+ */
+func binarySearch (nums []int, target int) int {
+    // wrmidte your code here
+    
+    end := len(nums)-1
+    start := 0
+    var mid int
+    for (start + 1 < end) {
+        mid = (start + end) / 2
+        if nums[mid] == target {
+            end = mid
+        }else if nums[mid] < target {
+            start = mid
+        }else if nums[mid] > target {
+            end = mid
+        }
+    }
+    if nums[start] == target {
+        return start
+    } else if nums[end] == target {
+        return end
+    }
+        
+    return -1
+}
+
+---------------------------------------------------------------------
+3 Rotate String
+e.g:
+Given "abcdefg".
+
+offset=0 => "abcdefg"
+offset=1 => "gabcdef"
+offset=2 => "fgabcde"
+offset=3 => "efgabcd"
+Be noted that: rotate of C++ function
+http://www.cplusplus.com/reference/algorithm/rotate/?kw=rotate
+
+class Solution {
+public:
+    /**
+     * @param str: An array of char
+     * @param offset: An integer
+     * @return: nothing
+     */
+    void rotateString(string &str, int offset) {
+        // write your code here
+        vector<int> m;
+        
+        if (str.length() > 0){
+            offset = offset % str.size();
+            for (int i=0;i<str.size();i++){
+                m.push_back(str[i]);
+            }
+            reverse(m.begin(),m.end());
+            rotate(m.begin(),m.begin()+offset,m.end());
+            reverse(m.begin(),m.end());
+            int i = 0;
+            for (vector<int>::iterator it=m.begin(); it!=m.end(); ++it){
+                str[i] = *it;
+                i ++;
+            }         
+        }
+    }
+};
+---------------------------------------------------------------------
+4 Guess Number Game
+Example
+n = 10, I pick 4 (but you don't know)
+
+Return 4. Correct !
+You call a pre-defined API guess(int num) which returns 3 possible results (-1, 1, or 0):
+// Forward declaration of guess API.
+// @param num, your guess
+// @return -1 if my number is lower, 1 if my number is higher, otherwise return 0
+int guess(int num);
+
+class Solution {
+public:
+    /**
+     * @param n an integer
+     * @return the number you guess
+     */
+    int guessNumber(int n) {
+        // Write your code here
+        int start = 1;
+        int end = n;
+        int mid;
+        while(start+1 < end) {
+            mid = (start + end) / 2;
+            if (guess(start) == 0) return start;
+            if (guess(mid) == 0) return mid;
+            if (guess(end) == 0) return end;
+            
+            if (guess(mid) == -1) {
+                end = mid;
+            } else if (guess(mid) == 1) {
+                start = mid;
+            }
+        }
+        if (guess(start) == 0) return start;
+        if (guess(end) == 0) return end;
+    }
+};
+---------------------------------------------------------------------
+5 String Permutation
+abcd is a permutation of bcad, but abbe is not a permutation of abe
+/**
+ * @param A: a string
+ * @param B: a string
+ * @return: a boolean
+ */
+func Permutation (A string, B string) bool {
+    // write your code here
+    if len(A) != len(B) {
+        return false
+    }
+    var m  [256]int
+    for i:=0;i<len(A);i++ {
+        m[A[i]]++    
+    }
+    for i:=0;i<len(A);i++ {
+        m[B[i]]-- 
+        if m[B[i]] < 0 {
+            return false
+        }
+    }
+    return true
+}
+---------------------------------------------------------------------
+6 Singleton
+although not understand yet (-_-)
+class Solution {
+private:
+    Solution(){};
+
+public:
+
+    /**
+     * @return: The same instance of this class every time
+     */
+    static Solution* getInstance() {
+        // write your code here
+        static Solution *singleton;
+        if (singleton == NULL) {
+            singleton = new Solution();
+        }
+        return singleton;
+    }
+};
+
+```
+ 
+ ```
+
+7 Merge Two Sorted Arrays
+A=[1,2,3,4]
+B=[2,4,5,6]
+return [1,2,2,3,4,4,5,6]
+/**
+ * @param A: sorted integer array A
+ * @param B: sorted integer array B
+ * @return: A new sorted integer array
+ */
+func mergeSortedArray (A []int, B []int) []int {
+// write your code here
+    m := len(A)
+    n := len(B)
+    i := 0
+    j := 0
+    start := 0
+    a := make([]int, m+n)
+    for(i<m && j<n){
+        if(A[i]<=B[j]){
+            a[start] = A[i]
+            i++
+        }else{
+            a[start] = B[j]
+            j++
+        }
+        start++
+    }
+    for(j<n){
+        a[start] = B[j]
+        j++
+        start++
+    }
+    for(i<m){
+        a[start] = A[i]
+        i++
+        start++
+    }
+    return a
+}
+---------------------------------------------------------------------
+8 window sum
+For array [1,2,7,8,5], moving window size k = 3. 
+1 + 2 + 7 = 10
+2 + 7 + 8 = 17
+7 + 8 + 5 = 20
+return [10,17,20]
+class Solution {
+public:
+    /**
+     * @param nums: a list of integers.
+     * @param k: length of window.
+     * @return: the sum of the element inside the window at each moving.
+     */
+    vector<int> winSum(vector<int> &nums, int k) {
+        // write your code here
+        vector<int> a;
+        int n = nums.size();
+        if (n < 1) return a;
+        int sum;
+        for (int i=0;i<n-k+1;i++) {
+            sum = nums[i];
+            for (int j= i + 1; j < k+i; j++) {
+             sum += nums[j];
+          }
+          a.push_back(sum);
+        }
+        return a;
+    }
+};
+---------------------------------------------------------------------
+9 Kth Prime Number
+Given n = 3, return 2.
+
+explanation:
+[2,3,5], 3 is the second prime number.
+Given n = 11, return 5.
+
+explanation:
+[2,3,5,7,11], 11 is the fifth prime number.
+class Solution {
+public:
+    /**
+     * @param n: the number
+     * @return: the rank of the number
+     */
+    int kthPrime(int n) {
+        // write your code here
+        array<int, 100000> isPrime;
+        isPrime.fill(1);
+        isPrime.at(0) = 0;
+        isPrime.at(1) = 0;
+        for (int i=2;i*i<n;i++) {
+            if (isPrime.at(i) == 1) {
+                for (int j = 2;j*i <n;j++) {
+                    isPrime.at(i*j) = 0;
+                }                
+            }
+
+        }
+        int c = 0;
+
+        for (int i=0; i<n; i++) {
+            if (isPrime.at(i) == 1) c++;
+        }
+        return c+1;
+    }
+};
+---------------------------------------------------------------------
+10  Valid Perfect Square
+Example
+For example:
+Given num = 16
+Returns True
+class Solution {
+public:
+    /**
+     * @param num: a positive integer
+     * @return: if num is a perfect square else False
+     */
+    bool isPerfectSquare(int num) {
+        // write your code here
+        if (num == 1) return true;
+        for (long i=2;i*i <= num; i++) {
+            
+            if (i * i == num) return true;
+        }
+        return false;
+    }
+};
+---------------------------------------------------------------------
+11 Count 1 in Binary
+Example
+Given 32, return 1
+
+Given 5, return 2
+
+Given 1023, return 9
+class Solution {
+public:
+    /*
+     * @param num: An integer
+     * @return: An integer
+     */
+    int countOnes(int num) {
+        // write your code here
+        if (num == -1) return 32;
+        int l;
+        int count,i = 0;
+        while (i < 32) {
+            l = num & 1;
+            if (l == 1) count ++;
+            num = num >> 1;
+            i ++;
+        }
+        return count;
+    }
+};
+---------------------------------------------------------------------
+12 Partition Array by Odd and Even
+Example
+Given [1, 2, 3, 4], return [1, 3, 2, 4]
+copy from others
+public class Solution {
+    /*
+     * @param nums: an array of integers
+     * @return: nothing
+     */
+    public void partitionArray(int[] nums) {
+        // write your code here
+        int le = nums.length;
+        int i=0,j=le-1;
+        int t;
+        while(i<j) {
+            if(nums[i] % 2 != 0){
+                i ++;
+            }
+            else if(nums[j] % 2 == 0){
+                j--;
+            } else{
+                t = nums[i];
+                nums[i] = nums[j];
+                nums[j] = t;
+            }
+        }
+    }
+}
+
+```
+ 
+ ```
+
+13 Reverse Array
+---------------------------------------------------------------------
+Given nums = [1,2,5]
+return [5,2,1]
+class Solution {
+public:
+    /**
+     * @param nums: a integer array
+     * @return: nothing
+     */
+    void reverseArray(vector<int> &nums) {
+        // write your code here
+        int le = nums.size();
+        int t;
+        for (int i=0,j=le-1;i<j;i++,j--){
+            t = nums.at(i);
+            nums.at(i) = nums.at(j);
+            nums.at(j) = t;
+        }
+    }
+};
+---------------------------------------------------------------------
+14 Delete Node in the Middle of Singly Linked List
+Implement an algorithm to delete a node in the middle of a singly linked list, given only access to that node.
+Linked list is 1->2->3->4, and given node 3, delete the node in place 1->2->4
+/**
+ * Definition of ListNode
+ * class ListNode {
+ * public:
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int val) {
+ *         this->val = val;
+ *         this->next = NULL;
+ *     }
+ * }
+ */
+
+
+class Solution {
+public:
+    /*
+     * @param node: the node in the list should be deletedt
+     * @return: nothing
+     */
+    void deleteNode(ListNode * node) {
+        // write your code here
+        if (node == NULL) return;
+        ListNode *t = node;
+        if (node->next != NULL){
+            t = node->next;
+            node->val = t->val;
+            node->next = t->next;
+        }
+    }
+};
+---------------------------------------------------------------------
+15 Leap Year
+Example
+Given n = 2008
+return true
+Given n = 2018
+return false
+class Solution {
+public:
+    /**
+     * @param n: a number represent year
+     * @return: whether year n is a leap year.
+     */
+    bool isLeapYear(int n) {
+        // write your code here
+        if (n % 400 == 0) return true;
+        if ((n % 4 == 0) && (n % 100 != 0)) return true;
+        return false;
+    }
+};
+---------------------------------------------------------------------
+16 Fizz Buzz
+Given number n. Print number from 1 to n. But:
+
+when number is divided by 3, print "fizz".
+when number is divided by 5, print "buzz".
+when number is divided by both 3 and 5, print "fizz buzz".
+If n = 15, you should return:
+
+[
+  "1", "2", "fizz",
+  "4", "buzz", "fizz",
+  "7", "8", "fizz",
+  "buzz", "11", "fizz",
+  "13", "14", "fizz buzz"
+]
+/**
+ * @param n: An integer
+ * @return: A list of strings.
+ */
+import "strconv"
+func fizzBuzz (n int) []string {
+    // write your code here
+    
+    s := make([]string, n)
+    if n == 0 {return s}
+    for i:= 1;i<=n;i++ {
+        if i % 15 == 0 {
+   
+            s[i-1] = "fizz buzz";
+        }else if i % 3 == 0 {
+            s[i-1] = "fizz"
+        }else if (i % 5 == 0) {
+            s[i-1] = "buzz"
+        }else {
+            s[i-1] = strconv.Itoa(i)
+        }
+        
+    }
+    return s
+}
+---------------------------------------------------------------------
+17  Insertion Sort List  (spend several hours to debug coredump)
+Given 1->3->2->0->null, return 0->1->2->3->null.
+Be noted that if no "        ListNode *dummy = new ListNode(0);
+" in init, core happens
+/**
+ * Definition of ListNode
+ * class ListNode {
+ * public:
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int val) {
+ *         this->val = val;
+ *         this->next = NULL;
+ *     }
+ * }
+ */
+
+class Solution {
+public:
+    /*
+     * @param head: The first node of linked list.
+     * @return: The head of linked list.
+     */
+    ListNode * insertionSortList(ListNode * head) {
+        // write your code here
+        if (head == NULL || head->next == NULL) return head;
+        ListNode *dummy = new ListNode(0);
+        ListNode *cur,*p,*start;
+        dummy->next = head;
+        cur = dummy->next;
+        p = cur->next;
+
+        while (p != NULL) {
+            start=dummy;
+            while(start->next != p){
+                if(p->val >= start->next->val){
+                    start = start->next;
+                } else {
+                    break;
+                }
+            }
+            if (p->val < start->next->val) {
+                cur->next=p->next;
+                p->next=start->next;
+                start->next=p;
+                p=cur->next;
+            }
+            if (start->next == p) {
+                cur = p;
+                p = cur->next;
+            }
+        }
+        return dummy->next;
+    }
+};
+---------------------------------------------------------------------
+ 18 Yang Hui Triangle (two-dimension vector usage)
+Given n = 4
+return 
+[
+ [1]
+ [1,1]
+ [1,2,1]
+ [1,3,3,1]
+]
+class Solution {
+public:
+    /**
+     * @param n: a Integer
+     * @return: the first n-line Yang Hui's triangle
+     */
+    vector<vector<int>> calcYangHuisTriangle(int n) {
+        // write your code here
+        vector<vector<int>> vv;
+        if (n==0) return vv;
+        vector<int> v;
+        v.push_back(1);
+        vv.push_back(v);
+        if (n==1) return vv;
+        int t;
+        for(int i=1;i<n;i++) {
+            vv.push_back(v);
+            for(int j=1;j<i;j++){
+                t = vv.at(i-1).at(j-1)+vv.at(i-1).at(j);
+                vv.at(i).push_back(t);
+            }
+            vv.at(i).push_back(1);
+        }
+        return vv;
+    }
+};
+
+```
+ 
+ ```
+
+---------------------------------------------------------------------
+19 Maximum and Minimum (size of two dimension vector)
+Given a matrix:
+[
+ [1,2,3],
+ [4,3,2],
+ [6,4,4]
+]
+return [6,1]
+class Solution {
+public:
+    /**
+     * @param matrix: an input matrix 
+     * @return: nums[0]: the maximum,nums[1]: the minimum
+     */
+    vector<int> maxAndMin(vector<vector<int>> &matrix) {
+        // write your code here
+        int m=matrix.size();
+        vector<int> mm;
+        if (m < 1) return mm;
+        int n=matrix[0].size();
+        mm.push_back(matrix[0][0]);
+        mm.push_back(matrix[0][0]);
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if (matrix[i][j] > mm.at(0)) mm.at(0)=matrix[i][j];
+                if (matrix[i][j] < mm.at(1)) mm.at(1)=matrix[i][j];
+            }
+        }
+        return mm;
+    }
+};
+---------------------------------------------------------------------
+20 Find Elements in Matrix (unordered_map : modify value should use at(key))
+Given a matrix, find a element that appear in all the rows in the matrix.You can assume that there is only one such element.
+
+For example:
+Given a matrix:
+
+[
+  [2,5,3],
+  [3,2,1],
+  [1,3,5]
+]
+return 3
+class Solution {
+public:
+    /**
+     * @param Matrix: the input
+     * @return: the element which appears every row
+     */
+    int FindElements(vector<vector<int>> &Matrix) {
+        // write your code here
+        int m=Matrix.size();
+        int n=Matrix[0].size();
+        unordered_map<int,int> ma,na;
+        for (int i=0;i<n;i++){
+            ma.emplace(Matrix[0][i],1);
+            na.emplace(Matrix[0][i],1);
+        }
+        int t;
+        for (int i=1;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(ma.count(Matrix[i][j]) !=1 && na.count(Matrix[i][j]) >= 1){
+                    na.erase(Matrix[i][j]);
+                }
+                if (ma.count(Matrix[i][j]) == 1) {
+                    t = na.at(Matrix[i][j]);
+                    t = t + 1;
+                    na.at(Matrix[i][j]) = t;
+                }
+            }
+        }
+        if (!na.empty()){
+            for ( auto& x: na ){
+                if (x.second >= m) return x.first; // here should be >=
+            } 
+        }
+        return -1;
+    }
+};
+---------------------------------------------------------------------
+21 Check Sum of Square Numbers (1+3+5+...)
+Example
+Given n = 5
+Return true // 1 * 1 + 2 * 2 = 5
+
+Given n = -5
+Return false
+/**
+ * @param num: the given number
+ * @return: whether whether there're two integers
+ */
+func checkSumOfSquareNumbers (num int) bool {
+// write your code here
+        if (num<0) { return false}
+        if (num==0 || num==1) {return true}
+        for i:=0;i*i<=num;i++ {
+            for j:=0;j*j<=num-i*i;j++ {
+                if i*i+j*j == num {
+                    return true
+                }
+            }
+        }
+        return false
+}
+more time-saving method (from others)
+class Solution {
+public:
+    /**
+     * @param num: the given number
+     * @return: whether whether there're two integers
+     */
+    bool checkSumOfSquareNumbers(int num) {
+        // write your code here
+        if (num<0) return false;
+        if (num==0 || num==1) return true;
+        for (long a = 0; a * a <= num; a++) {
+            double b = sqrt(num - a * a);
+            if (b == (int) b)
+                return true;
+        }
+
+        return false;
+    }
+};
+---------------------------------------------------------------------
+22 Compare Strings
+Example
+For A = "ABCD", B = "ACD", return true.
+For A = "ABCD", B = "AABC", return false.
+/**
+ * @param A: A string
+ * @param B: A string
+ * @return: if string A contains all of the characters in B return true else return false
+ */
+func compareStrings (A string, B string) bool {
+// write your code here
+   if len(A) < len(B) {
+      return false
+   }
+   var a [256]int
+   for i := 0; i < len(B); i++ {
+      a[B[i]-'A']++
+   }
+   for i := 0; i < len(A); i++ {
+      a[A[i]-'A']--
+   }
+   for i := 0; i < len(B); i++ {
+      if a[B[i]-'A'] > 0 {
+         return false
+      }
+   }
+
+   return true
+    
+}
+---------------------------------------------------------------------
+23  Ugly Number
+Ugly numbers are positive numbers whose prime factors only include 2, 3, 5. For example, 6, 8 are ugly while 14 is not ugly since it includes another prime factor 7.
+Given num = 8 return true
+Given num = 14 return false
+/**
+ * @param num: An integer
+ * @return: true if num is an ugly number or false
+ */
+func isUgly (num int) bool {
+    // write your code here
+    if (num <= 0) {return false}
+    for num > 1 {
+        if num%2 == 0 { 
+            num = num / 2 
+            }else if num%3 == 0 { 
+                num = num / 3 
+            }else if num%5 == 0 { 
+                num = num / 5 
+            }else {
+                return false    
+            }
+    }
+    return true
+}
+---------------------------------------------------------------------
+24 Remove Nth Node From End of List 
+Given linked list: 1->2->3->4->5->null, and n = 2.
+
+After removing the second node from the end, the linked list becomes 1->2->3->5->null.
+/**
+ * Definition of ListNode
+ * class ListNode {
+ * public:
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int val) {
+ *         this->val = val;
+ *         this->next = NULL;
+ *     }
+ * }
+ */
+
+
+class Solution {
+public:
+    /*
+     * @param head: The first node of linked list.
+     * @param n: An integer
+     * @return: The head of linked list.
+     */
+    ListNode * removeNthFromEnd(ListNode * head, int n) {
+        // write your code here
+        ListNode *dummy = new ListNode(0);
+        dummy->next=head;
+        ListNode *p;
+        p = dummy->next;
+        int c=0;
+        while(p != NULL){
+            c++;
+            p = p->next;
+        }
+        if (n > c) return head;
+        if (n == c) {
+            return dummy->next->next;
+        }
+        p = dummy->next;
+        int i = 0;
+        while(p != NULL){
+            i ++;
+            if (i == c-n) {
+                p->next=p->next->next;
+                return dummy->next;
+            }
+            p = p->next;
+        }
+        
+    }
+};
+
+```
+  
+ ```
+
+---------------------------------------------------------------------
+25 Merge Two Sorted Lists (太慢了，怎么提速？)
+Merge two sorted (ascending) linked lists and return it as a new sorted list. The new sorted list should be made by splicing together the nodes of the two lists and sorted in ascending order.
+Given 1->3->8->11->15->null, 2->null , return 1->2->3->8->11->15->null.
+/**
+ * Definition of ListNode
+ * class ListNode {
+ * public:
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int val) {
+ *         this->val = val;
+ *         this->next = NULL;
+ *     }
+ * }
+ */
+
+
+class Solution {
+public:
+    /*
+     * @param l1: ListNode l1 is the head of the linked list
+     * @param l2: ListNode l2 is the head of the linked list
+     * @return: ListNode head of linked list
+     */
+    ListNode * mergeTwoLists(ListNode * l1, ListNode * l2) {
+        // write your code here
+        if (l1==NULL) return l2;
+        if (l2==NULL) return l1;
+        ListNode *r;
+        ListNode *dummy = new ListNode(0);
+        r = dummy;
+        while(l1!=NULL && l2!=NULL){
+            if(l1->val >= l2->val){
+                r->next = l2;
+                l2 = l2->next;
+            }else {
+                r->next = l1;
+                l1 = l1->next;   
+            }
+            r=r->next;
+        }
+        if (l2 != NULL) {
+            r->next=l2;
+        }
+        if (l1 != NULL) {
+            r->next=l1;
+        }
+        return dummy->next;
+    }
+};
+---------------------------------------------------------------------
+26 Merge Sorted Array
+Given two sorted integer arrays A and B, merge B into A as one sorted array.
+You may assume that A has enough space (size that is greater or equal to m + n) to hold additional elements from B. The number of elements initialized in A and B are m and n respectively.
+Example
+A = [1, 2, 3, empty, empty], B = [4, 5]
+After merge, A will be filled as [1, 2, 3, 4, 5]
+class Solution {
+public:
+    /*
+     * @param A: sorted integer array A which has m elements, but size of A is m+n
+     * @param m: An integer
+     * @param B: sorted integer array B which has n elements
+     * @param n: An integer
+     * @return: nothing
+     */
+    void mergeSortedArray(int A[], int m, int B[], int n) {
+        // write your code here
+        for(int i=n-1,j=m-1;i>=0 || j>=0;){
+            if(B[i] >= A[j] || j < 0) {
+                A[i+j+1] = B[i]; 
+                i--;
+            }else if (B[i] < A[j] || i < 0){
+                A[i+j+1] = A[j];
+                j--;
+            }
+        }
+        
+    }
+};
+---------------------------------------------------------------------
+27 Intersection of Two Arrays II
+Example
+Given nums1 = [1, 2, 2, 1], nums2 = [2, 2], return [2, 2].
+class Solution {
+public:
+    
+    /*
+     * @param nums1: an integer array
+     * @param nums2: an integer array
+     * @return: an integer array
+     */
+    vector<int> intersection(vector<int> nums1, vector<int> nums2) {
+        // write your code here
+        unordered_map<int,int> m;
+        int t;
+        for (int i=0;i<nums1.size();i++) {
+            if(m.count(nums1[i]) > 0) {
+                t = m.at(nums1[i]);
+                m.at(nums1[i]) = t+1;
+            }else {
+                m.emplace(nums1[i],1);
+            }
+        }
+        vector<int> r;
+        
+        for (int j=0;j<nums2.size();j++) {
+            if(m.count(nums2[j]) > 0 && m.at(nums2[j]) >=1 ){
+                m.at(nums2[j])--;
+                r.push_back(nums2[j]);
+                
+            }
+        }
+        return r;
+    }
+};
+---------------------------------------------------------------------
+28 Happy Number
+Those numbers for which this process ends in 1 are happy numbers.
+Example
+19 is a happy number
+
+1^2 + 9^2 = 82
+8^2 + 2^2 = 68
+6^2 + 8^2 = 100
+1^2 + 0^2 + 0^2 = 1
+class Solution {
+public:
+    /**
+     * @param n: An integer
+     * @return: true if this is a happy number or false
+     */
+    bool isHappy(int n) {
+        // write your code here
+        int c=0;
+        unordered_map<int,int> m;
+        if (n == 1) return true;
+        m.emplace(n,1);
+        while(n > 9){
+            c += (n%10)*(n%10);
+            n = n/10;
+        }
+        c += n*n;
+        while(!m.count(c)){
+            m.emplace(c,1);
+            if(c == 1) return true;
+            int t = 0;
+            n = c;
+            c = 0;
+            while(n > 9) {
+                c += (n%10)*(n%10);
+                n = n/10;
+            }
+            c += n*n;
+        }
+        return false;
+    }
+};
+---------------------------------------------------------------------
+29 Remove Duplicates from Sorted List 
+Given 1->1->2, return 1->2.
+Given 1->1->2->3->3, return 1->2->3
+class Solution {
+public:
+    /**
+     * @param head: head is the head of the linked list
+     * @return: head of linked list
+     */
+    ListNode * deleteDuplicates(ListNode * head) {
+        // write your code here
+        if(head==NULL) return head;
+        ListNode *dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode *p;
+        p = head->next;
+        while(p != NULL){
+            if (p->val == head->val) {
+                p = p->next;
+                head->next = p;
+            }else {
+                head = p;
+                p = head->next;               
+            }
+        }
+        return dummy->next;
+    }
+};
+---------------------------------------------------------------------
+30 Remove Duplicates from Sorted Array II
+Follow up for "Remove Duplicates":
+What if duplicates are allowed at most twice?
+For example,
+Given sorted array A = [1,1,1,2,2,3],
+Your function should return length = 5, and A is now [1,1,2,2,3].
+Method one -- too much time
+class Solution {
+public:
+    /**
+     * @param A: a list of integers
+     * @return : return an integer
+     */
+    int removeDuplicates(vector<int> &nums) {
+        // write your code here
+        vector<int> res;
+        int r=nums.size();
+        if (r <= 2) return r;
+        res.push_back(nums[0]);
+        int c=1;
+        for(int i=1;i<nums.size();i++){
+            if(res.back() == nums[i] && c<2) {
+                c++;
+                res.push_back(nums[i]);
+            }else if (res.back() != nums[i]){
+                c=1;
+                res.push_back(nums[i]);
+            }else if(c >= 2) {
+                r--;
+                c++;
+            }
+            
+        }
+        nums = res;
+        return r;
+    }
+};
+-----------
+Method two -- 动态index from others
+class Solution {
+public:
+    /**
+     * @param A: a list of integers
+     * @return : return an integer
+     */
+    int removeDuplicates(vector<int> &nums) {
+        // write your code here
+        if (nums.size()<=2) return nums.size();
+        int c = 2 ;
+        for(int i=2;i<nums.size();i++){
+            if(nums[i] > nums[c-2]) nums[c++] = nums[i];
+        }
+        return c;
+    }
+};
+
+```
+  
+ ```
+
+---------------------------------------------------------------------
+31 Sqrt(x)  (二分查找的标准模式，死循环处理，不用long的处理)
+Example
+sqrt(3) = 1
+sqrt(4) = 2
+sqrt(5) = 2
+sqrt(10) = 3
+class Solution {
+public:
+    /**
+     * @param x: An integer
+     * @return: The sqrt of x
+     */
+    int sqrt(int x) {
+        // write your code here
+        if (x==0) return 0;
+        if (x==1 || x==2) return 1;
+        int start=0,end=x/2;
+        int mid;
+        while(start < end) {
+            if(mid == start+(end-start)/2) return mid;
+            mid = start+(end-start)/2;
+            if(mid == x/mid) {
+                return mid;
+            }
+            else if(mid > x/mid) {
+                end = mid;
+            }else if(mid < x/mid) {
+                start = mid;
+            }
+        }
+
+        return start;
+    }
+};
+---------------------------------------------------------------------
+32 Palindrome Number II
+Determines whether a binary representation of a non-negative integer n is a palindrome (转成二进制是否对称)
+class Solution {
+public:
+    /**
+     * @param n: non-negative integer n.
+     * @return: return whether a binary representation of a non-negative integer n is a palindrome.
+     */
+    bool isPalindrome(int n) {
+        // Write your code here
+        if (n == 0) return true;
+        vector<int> r;
+        int c;
+        while(n > 0){
+            c = n & 1;
+            r.push_back(c);
+            n = n >> 1;
+        }
+
+        for(int i=0,j=r.size()-1;i<j;i++,j--){
+            if (r.at(i) != r.at(j)) return false;
+        }
+        return true;
+    }
+};
+---------------------------------------------------------------------
+33  Binary Tree Postorder Traversal 
+golang:
+func postorderTraversal (root *TreeNode) []int {
+    // write your code here
+    var v []int
+    if (root == nil) {
+        return v
+    }
+   
+    if (root.Left != nil) {
+        v = append(v, postorderTraversal(root.Left)...)
+    } 
+    if (root.Right != nil) {
+         v = append(v, postorderTraversal(root.Right)...)
+    }
+     v = append(v, root.Val)
+    return v
+}
+c++:
+class Solution {
+public:
+    /**
+     * @param root: A Tree
+     * @return: Postorder in ArrayList which contains node values.
+     */
+    vector<int> r;
+    vector<int> postorderTraversal(TreeNode * root) {
+        // write your code here
+        if (root==NULL) return r;
+        postTra(root);
+        return r;
+    }
+    
+    void postTra(TreeNode *root) {
+        if(root->left!=NULL) postTra(root->left);
+        if(root->right!=NULL) postTra(root->right);
+        r.push_back(root->val);
+    }
+};
+---------------------------------------------------------------------
+34 Binary Tree Preorder Traversal
+class Solution {
+public:
+    /**
+     * @param root: A Tree
+     * @return: Preorder in ArrayList which contains node values.
+     */
+    vector<int> r;
+    vector<int> preorderTraversal(TreeNode * root) {
+        // write your code here
+        if(root == NULL) return r;
+        preT(root);
+        return r;
+    }
+    void preT(TreeNode *root) {
+        r.push_back(root->val);
+        if (root->left!=NULL) preT(root->left);
+        if (root->right!=NULL) preT(root->right);
+        
+    }
+};
+---------------------------------------------------------------------
+35 Binary Tree Inorder Traversal
+class Solution {
+public:
+    /**
+     * @param root: A Tree
+     * @return: Inorder in ArrayList which contains node values.
+     */
+    vector<int> r;
+    vector<int> inorderTraversal(TreeNode * root) {
+        // write your code here
+        if (root==NULL) return r;
+        inT(root);
+        return r;
+    }
+    void inT(TreeNode *root){
+        if(root->left!=NULL) inT(root->left);
+        r.push_back(root->val);
+        if(root->right!=NULL) inT(root->right);
+    }
+};
+---------------------------------------------------------------------
+36 Identical Binary Tree  (copy from 九章算法，由 @九章算法 提供)
+Check if two binary trees are identical. Identical means the two binary trees have the same structure and every identical position has the same value.
+class Solution {
+public:
+    /**
+     * @param a: the root of binary tree a.
+     * @param b: the root of binary tree b.
+     * @return: true if they are identical, or false.
+     */
+    bool isIdentical(TreeNode * a, TreeNode * b) {
+        // write your code here
+        if (a==NULL && b==NULL) return true;
+        if (a!=NULL && b!=NULL) {
+            return a->val == b->val && isIdentical(a->left,b->left) && 
+                isIdentical(a->right,b->right);
+        } 
+        return false;
+    }
+    
+};
+
+```
+ 
+ ```
+
+---------------------------------------------------------------------
+37  For the given binary tree, return a deep copy of it.
+class Solution {
+public:
+    /**
+     * @param root: The root of binary tree
+     * @return: root of new tree
+     */
+    TreeNode * cloneTree(TreeNode * root) {
+        // write your code here
+        if(root == NULL) return root;
+        
+        TreeNode *r = new TreeNode(root->val);
+        if (root->left!=NULL) r->left = cloneTree(root->left);
+        if (root->right!=NULL) r->right = cloneTree(root->right);
+        return r;
+    }
+};
+---------------------------------------------------------------------
+38 Minimum Depth of Binary Tree 
+Given a binary tree, find its minimum depth.
+The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+Given a binary tree as follow:
+
+  1
+ / \ 
+2   3
+   / \
+  4   5
+The minimum depth is 2.
+class Solution {
+public:
+    /**
+     * @param root: The root of binary tree
+     * @return: An integer
+     */
+    int minDepth(TreeNode * root) {
+        // write your code here
+        if (root==NULL) return 0;
+        if (root->left == NULL) return minDepth(root->right)+1;
+        if (root->right == NULL) return minDepth(root->left)+1;
+        return min(minDepth(root->left), minDepth(root->right)) + 1;
+    }
+};
+---------------------------------------------------------------------
+39 Maximum Depth of Binary Tree
+class Solution {
+public:
+    /**
+     * @param root: The root of binary tree.
+     * @return: An integer
+     */
+    int maxDepth(TreeNode * root) {
+        // write your code here
+        if (root == NULL) return 0;
+        if (root->left==NULL) return maxDepth(root->right) + 1;
+        if (root->right==NULL) return maxDepth(root->left) + 1;
+        return max(maxDepth(root->left), maxDepth(root->right)) + 1;
+    }
+};
+---------------------------------------------------------------------
+40 Binary Tree Level Order Traversal  (广度优先遍历)
+Given binary tree {3,9,20,#,#,15,7},
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its level order traversal as:
+
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+class Solution {
+public:
+    /**
+     * @param root: A Tree
+     * @return: Level order a list of lists of integer
+     */
+    vector<vector<int>> levelOrder(TreeNode * root) {
+        // write your code here
+        vector<vector<int>> res;
+        if (root == NULL) return res;
+        int count = 0;
+        queue<TreeNode*> q;
+        q.push(root);
+        int num = 1;
+        while(!q.empty()){
+            vector<int> v;
+            count = 0;
+            for(int i=0;i<num;i++){
+                TreeNode *p = q.front();
+                q.pop();
+                v.push_back(p->val);
+                if(p->left!=NULL) {
+                    q.push(p->left);
+                    count++;
+                }
+                if(p->right!=NULL) {
+                    q.push(p->right);
+                    count++;
+                }
+            }
+            num = count;
+            res.push_back(v);
+        }
+        return res;
+    }
+};
+---------------------------------------------------------------------
+41 Binary Tree Path Sum  (传引用-- TBD 指针与引用)
+Given a binary tree, find all paths that sum of the nodes in the path equals to a given number target.
+Given a binary tree, and target = 5:
+     1
+    / \
+   2   4
+  / \
+ 2   3
+return
+[
+  [1, 2, 2],
+  [1, 4]
+]
+class Solution {
+public:
+    /*
+     * @param root: the root of binary tree
+     * @param target: An integer
+     * @return: all valid paths
+     */
+    vector<vector<int>> binaryTreePathSum(TreeNode * root, int target) {
+        // write your code here
+        vector<vector<int>> r;
+        vector<int> v;
+        if (root == NULL) return r;
+        addNode(root, r, v, target);
+        return r;
+    }
+    
+    void addNode(TreeNode * root, vector<vector<int>> &r, vector<int> v, int target)
+    {
+        v.push_back(root->val);
+        target -= root->val;
+        if (root->left != NULL) {
+            addNode(root->left, r, v, target);
+        }
+        if (root->right != NULL) {
+            addNode(root->right, r, v, target);
+        }
+        if (root->left == NULL && root->right == NULL && target == 0) {
+            cout << "targeted !!! " << endl;
+            r.push_back(v);
+        }
+
+        return;
+    }
+};
+---------------------------------------------------------------------
+42  Binary Tree Paths (关键点：临时string的赋值)
+Given the following binary tree:
+   1
+ /   \
+2     3
+ \
+  5
+[
+  "1->2->5",
+  "1->3"
+]
+class Solution {
+public:
+    /**
+     * @param root: the root of the binary tree
+     * @return: all root-to-leaf paths
+     */
+    vector<string> binaryTreePaths(TreeNode * root) {
+        // write your code here
+        vector<string> res;
+        if (root == NULL) return res;
+        string s = "";
+        addP(root, res, s);
+        return res;        
+    }
+    void addP(TreeNode * root, vector<string> &res, string &s)
+    {
+        if(root->left==NULL && root->right==NULL) {
+            string s1 = s;
+            s1.append(to_string(root->val));
+            res.push_back(s1);
+            return;
+        }
+        s.append(to_string(root->val));
+        s.append("->");  
+        string s2 = s;
+        if(root->left!=NULL) addP(root->left,res,s);
+        if(root->right!=NULL) addP(root->right,res,s2);
+    }
+};
+
+```
+
+```
+
+ ---------------------------------------------------------------------
+43  Invert Binary Tree 
+Example
+  1         1
+ / \       / \
+2   3  => 3   2
+   /       \
+  4         4
+class Solution {
+public:
+    /**
+     * @param root: a TreeNode, the root of the binary tree
+     * @return: nothing
+     */
+    void invertBinaryTree(TreeNode * root) {
+        // write your code here
+        if (root==NULL) return;
+        
+        if (root->left != NULL || root->right != NULL)
+        {
+            TreeNode *t = root->left;
+            root->left = root->right;
+            root->right = t;
+        }
+        if (root->left != NULL) invertBinaryTree(root->left);
+        
+        if (root->right != NULL) invertBinaryTree(root->right);
+        
+    }
+};
+ ---------------------------------------------------------------------
+44  Flatten Binary Tree to Linked List (递归left里面递归right，没想到。。。)
+Example
+              1
+               \
+     1          2
+    / \          \
+   2   5    =>    3
+  / \   \          \
+ 3   4   6          4
+                     \
+                      5
+                       \
+                        6
+class Solution {
+public:
+    /**
+     * @param root: a TreeNode, the root of the binary tree
+     * @return: nothing
+     */
+    void flatten(TreeNode * root) {
+        // write your code here
+        TreeNode *t;
+        if(!root) return;
+        if(root->left) {
+            flatten(root->left);
+            if(root->right) { // this is important
+               flatten(root->right);
+            }
+            t = root->left;
+            while(t && t->right) {
+                t = t->right;  // this is important
+            }
+            t->right = root->right;
+            root->right = root->left;
+            root->left = NULL;
+        }
+        if (root->right) flatten(root->right);
+    }
+};
+from angeldswang  [再看]
+    public void flatten(TreeNode root) {
+        if (root == null) return;
+
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+
+        while (!stack.empty()) {
+            TreeNode curr = stack.pop();
+            if (curr.right != null) stack.push(curr.right);
+            if (curr.left != null) stack.push(curr.left);
+            curr.left = null;
+            if (!stack.empty())curr.right = stack.peek();
+        }
+    }
+ ---------------------------------------------------------------------
+45 Subtree
+Example
+T2 is a subtree of T1 in the following case:
+
+       1                3
+      / \              / 
+T1 = 2   3      T2 =  4
+        /
+       4
+T2 isn't a subtree of T1 in the following case:
+
+       1               3
+      / \               \
+T1 = 2   3       T2 =    4
+        /
+       4
+class Solution {
+public:
+    /**
+     * @param T1: The roots of binary tree T1.
+     * @param T2: The roots of binary tree T2.
+     * @return: True if T2 is a subtree of T1, or false.
+     */
+    bool isSubtree(TreeNode * T1, TreeNode * T2) {
+        // write your code here
+        if (!T2) return true;
+        if (!T1) return false;
+        if (T1->val == T2->val && isSametree(T1, T2)) return true;
+
+        return isSubtree(T1->left, T2) || isSubtree(T1->right, T2);
+    }
+    bool isSametree(TreeNode *r1, TreeNode *r2) {
+        if (!r1 && !r2) return true;
+        if (!(r1 && r2)) return false;
+        if (r1->val != r2->val) return false;
+        return isSametree(r1->left, r2->left) && isSametree(r1->right, r2->right);
+    }
+};
+ ---------------------------------------------------------------------
+46 quick sort (copy from book -- need revisit)
+class Solution {
+public:
+
+    void sortIntegers2(vector<int> &A) {
+        if (A.size() < 1) return;
+        sort(0, A.size()-1, A);
+    }
+    
+    void sort(int start, int end, vector<int> &a) {
+        int mid = midR(start, end, a);
+        if (start < mid-1) sort(start, mid-1, a); // important
+        if (mid < end) sort(mid, end, a);
+    }
+    
+    int midR(int start, int end, vector<int> &a) {
+        int mid = a[(start+end)/2];
+        while (start <= end) {
+            while (a[start] < mid) start++;
+            while (a[end] > mid) end--;
+            if (start <= end) {
+                int t = a[start];
+                a[start] = a[end];
+                a[end] = t;
+                end--;  // remember
+                start++; //remember
+            }
+        }
+        return start;
+    }
+};
+---------------------------------------------------------------------
+47 Intersection of Two Arrays
+Example
+Given nums1 = [1, 2, 2, 1], nums2 = [2, 2], return [2].
+class Solution {
+public:
+    
+    /*
+     * @param nums1: an integer array
+     * @param nums2: an integer array
+     * @return: an integer array
+     */
+    vector<int> intersection(vector<int> nums1, vector<int> nums2) {
+        // write your code here
+        vector<int> v;
+        unordered_map<int,int> m;
+        if (nums1.size() < 1 || nums2.size() < 1) return v;
+        for (int i=0;i<nums1.size();i++) {
+            if (m.count(nums1[i]) == 0 ) m.emplace(nums1[i], 1);
+        }
+
+        for (int i=0;i<nums2.size();i++) {
+            if (m.count(nums2[i]) > 0) {
+                v.push_back(nums2[i]);
+                m.erase(nums2[i]);
+            }
+        }
+        return v;
+    }
+};
+ ---------------------------------------------------------------------
+48 Two Sum
+Given an array of integers, find two numbers such that they add up to a specific target number.
+
+The function twoSum should return indices of the two numbers such that they add up to the target, where index1 must be less than index2. Please note that your returned answers (both index1 and index2) are zero-based.
+numbers=[2, 7, 11, 15], target=9
+
+return [0, 1]
+class Solution {
+public:
+    /**
+     * @param numbers: An array of Integer
+     * @param target: target = numbers[index1] + numbers[index2]
+     * @return: [index1 + 1, index2 + 1] (index1 < index2)
+     */
+    vector<int> twoSum(vector<int> &numbers, int target) {
+        // write your code here
+        vector<int> v(2);
+        if (numbers.size() < 1) return v;
+        unordered_map<int,int> m;
+        for(int i=0; i<numbers.size(); i++) {
+            if (m.count(numbers[i]) == 0) m.emplace(numbers[i], i);
+            if (m.count(target-numbers[i]) != 0) {
+                auto tp = m.find(target-numbers[i]);
+                if (tp->second != i) {
+                    v[0] = min(tp->second,i);
+                    v[1] = max(tp->second, i);
+                    return v;
+                }
+
+            }
+        }
+        return v;
+    }
+};
