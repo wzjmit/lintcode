@@ -1,1 +1,188 @@
+----------------------------------------------------------------------
+49 Merge Intervals （sort 的更高级用法，以及lamada函数，
+[](vector<int> i, vector<int> j){return i[0] < j[0];}）
+Example
+Given intervals => merged intervals:
 
+[                     [
+  (1, 3),               (1, 6),
+  (2, 6),      =>       (8, 10),
+  (8, 10),              (15, 18)
+  (15, 18)            ]
+]
+/**
+ * Definition of Interval:
+ * classs Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this->start = start;
+ *         this->end = end;
+ *     }
+ * }
+ */
+
+class Solution {
+public:
+    /**
+     * @param intervals: interval list.
+     * @return: A new interval list.
+     */
+    vector<Interval> merge(vector<Interval> &intervals) {
+        // write your code here
+        vector<Interval> v;
+        if (intervals.size() < 1) return v;
+
+        sort(intervals.begin(), intervals.end(), myComp);
+        v.push_back(intervals[0]);
+
+        int j=0;
+        for (int i=1; i<intervals.size(); i++) {
+            if (intervals[i].start > v[j].end) {
+                v.push_back(intervals[i]);
+                j ++;
+            } else if (intervals[i].end >= v[j].end ) {
+                v[j].end = intervals[i].end;
+            }
+        }
+        return v;
+    }
+    static bool myComp(Interval i1, Interval i2) {
+        return (i1.start < i2.start);
+    }
+};
+----------------------------------------------------------------------
+50  Multi-keyword Sort
+Given n students(number from 1 to n) and their examination grades. There are two keywords, examination grades and student id. Order the array according to the first keyword (Descending), if the first key is the same, it is sorted by the second keyword (ascending).
+Example
+Given [[2,50],[1,50],[3,100]],
+return [[3,100],[1,50],[2,50]]
+class Solution {
+public:
+    /**
+     * @param array: the input array
+     * @return: the sorted array
+     */
+    vector<vector<int>> multiSort(vector<vector<int>> &array) {
+        // Write your code here
+        if (array.size() < 1) return array;
+        sort(array.begin(), array.end(), myC);
+        return array;
+        
+    }
+    static bool myC (vector<int> v1, vector<int> v2) {
+        if (v1[1] > v2[1]) return true;
+        if (v1[1] == v2[1]) {
+            if (v1[0] < v2[0]) return true;
+        }
+        return false;
+    }
+};
+----------------------------------------------------------------------
+51 Meeting Rooms
+Given an array of meeting time intervals consisting of start and end times [[s1,e1],[s2,e2],...] (si < ei), determine if a person could attend all meetings.
+Example
+Given intervals = [[0,30],[5,10],[15,20]], return false.
+class Solution {
+public:
+    /**
+     * @param intervals: an array of meeting time intervals
+     * @return: if a person could attend all meetings
+     */
+    bool canAttendMeetings(vector<Interval> &intervals) {
+        // Write your code here
+        if (intervals.size() < 2) return true;
+        sort(intervals.begin(), intervals.end(), myComp);
+        for (int i=1;i<intervals.size();i++) {
+            if (intervals[i].start < intervals[i-1].end) return false;
+        }
+        return true;
+    }
+    static bool myComp(Interval i1, Interval i2) {
+        return (i1.start < i2.start);
+    }
+};
+----------------------------------------------------------------------
+52 Hex Conversion  (push back of string and reverse, 重看)
+Given a decimal number n and an integer k, Convert decimal number n to base-k.
+Example 1:
+Given n = 5, k = 2
+return "101"
+
+Example 2:
+Given n = 30, k = 16
+return "1E"
+class Solution {
+public:
+    /**
+     * @param n: a decimal number
+     * @param k: a Integer represent base-k
+     * @return: a base-k number
+     */
+    string hexConversion(int n, int k) {
+        // write your code here
+        if (n <= 0) return "0";
+        string s;
+        int t;
+        while (n > 0) {
+            t = n % k;
+            if (t < 10) s.push_back(t+'0');
+            if (t > 9) s.push_back(t - 10 + 'A');
+            n = n / k;
+        }
+        reverse(s.begin(), s.end());
+        return s;
+        
+    }
+};
+----------------------------------------------------------------------
+53 Add Digits
+Given a non-negative integer num, repeatedly add all its digits until the result has only one digit.
+Given num = 38.
+The process is like: 3 + 8 = 11, 1 + 1 = 2. Since 2 has only one digit, return 2.
+class Solution {
+public:
+    /**
+     * @param num: a non-negative integer
+     * @return: one digit
+     */
+    int addDigits(int num) {
+        // write your code here
+        if (num < 10) return num;
+        int t;
+        while (num > 9) {
+            t = 0;
+            while (num > 9) {
+                t += num % 10;
+                num = num / 10;
+            }
+            t += num;
+            num = t;
+        }
+        return num;
+    }
+};
+----------------------------------------------------------------------
+54 Greatest Common Divisor (辗转相除法)
+Given two numbers, number a and number b. Find the greatest common divisor of the given two numbers.
+Example
+Given a = 10, b = 15, return 5.
+Given a = 15, b = 30, return 15.
+class Solution {
+public:
+    /**
+     * @param a: the given number
+     * @param b: another number
+     * @return: the greatest common divisor of two numbers
+     */
+    int gcd(int a, int b) {
+        // write your code here
+        if (a > b) mgcb(a, b);
+        else mgcb(b,a);
+        
+    }
+    int mgcb(int a, int b) {
+        if (b == 0) return a;
+        return mgcb(b, a%b);
+    }
+    
+};
