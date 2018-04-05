@@ -1,4 +1,4 @@
-56  Example
+/* Example
 Given list1 = [(1,2),(3,4)] and list2 = [(2,3),(5,6)], return [(1,4),(5,6)].
 /**
  * Definition of Interval:
@@ -10,6 +10,7 @@ Given list1 = [(1,2),(3,4)] and list2 = [(2,3),(5,6)], return [(1,4),(5,6)].
  *     }
  * }
  */
+*/
 class Solution {
 public:
     /**
